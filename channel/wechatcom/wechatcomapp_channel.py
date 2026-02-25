@@ -115,10 +115,15 @@ class WechatComAppChannel(ChatChannel):
             logger.info("[wechatcom] sendVoice={}, receiver={}".format(reply.content, receiver))
         elif reply.type == ReplyType.IMAGE_URL:  # 从网络下载图片
             img_url = reply.content
-            pic_res = requests.get(img_url, stream=True)
             image_storage = io.BytesIO()
-            for block in pic_res.iter_content(1024):
-                image_storage.write(block)
+            if isinstance(img_url, str) and img_url.startswith("file://"):
+                local_path = img_url[len("file://"):]
+                with open(local_path, "rb") as f:
+                    image_storage.write(f.read())
+            else:
+                pic_res = requests.get(img_url, stream=True)
+                for block in pic_res.iter_content(1024):
+                    image_storage.write(block)
             sz = fsize(image_storage)
             if sz >= 10 * 1024 * 1024:
                 logger.info("[wechatcom] image too large, ready to compress, sz={}".format(sz))
