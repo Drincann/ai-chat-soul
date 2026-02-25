@@ -9,7 +9,7 @@ from agent.protocol import Agent, LLMModel, LLMRequest
 from bridge.agent_event_handler import AgentEventHandler
 from bridge.agent_initializer import AgentInitializer
 from bridge.bridge import Bridge
-from bridge.context import Context
+from bridge.context import Context, ContextType
 from bridge.reply import Reply, ReplyType
 from common import const
 from common.log import logger
@@ -307,12 +307,24 @@ class AgentBridge:
             # Filter tools based on context
             original_tools = agent.tools
             filtered_tools = original_tools
+            is_image_feedback = bool(
+                context
+                and (
+                    context.get("origin_ctype") == ContextType.IMAGE
+                    or context.get("type") == ContextType.IMAGE
+                )
+            )
             
             # If this is a scheduled task execution, exclude scheduler tool to prevent recursion
             if context and context.get("is_scheduled_task"):
                 filtered_tools = [tool for tool in agent.tools if tool.name != "scheduler"]
                 agent.tools = filtered_tools
                 logger.info(f"[AgentBridge] Scheduled task execution: excluded scheduler tool ({len(filtered_tools)}/{len(original_tools)} tools)")
+            elif is_image_feedback:
+                # In image feedback flow, disable `send` to avoid "帮你发送图片" mis-trigger.
+                filtered_tools = [tool for tool in agent.tools if tool.name != "send"]
+                agent.tools = filtered_tools
+                logger.info(f"[AgentBridge] Image feedback mode: excluded send tool ({len(filtered_tools)}/{len(original_tools)} tools)")
             else:
                 # Attach context to scheduler tool if present
                 if context and agent.tools:
@@ -334,7 +346,7 @@ class AgentBridge:
                 )
             finally:
                 # Restore original tools
-                if context and context.get("is_scheduled_task"):
+                if (context and context.get("is_scheduled_task")) or is_image_feedback:
                     agent.tools = original_tools
                 
                 # Log execution summary

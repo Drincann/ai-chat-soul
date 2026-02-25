@@ -92,6 +92,8 @@ available_setting = {
     "group_speech_recognition": False,
     "image_recognition": True,
     "image_recognition_prompt": "请描述这张图片的主要内容。",
+    "image_use_agent": True,
+    "image_agent_prompt": "请结合当前人设与会话上下文，对这张图片给出有温度的反馈。",
     "voice_reply_voice": False,
     "always_reply_voice": False,
     "voice_to_text": "openai",

@@ -245,9 +245,17 @@ class ChatChannel(Channel):
                     "msg": context.get("msg")
                 }
                 if conf().get("image_recognition", True):
-                    # For image understanding, bypass agent route and call model adapter directly.
-                    # Agent mode treats input as generic text and may trigger `send` tool instead of vision.
-                    vision_reply = Bridge().fetch_reply_content(image_path, context)
+                    use_agent_for_image = conf().get("image_use_agent", True) and conf().get("agent", False)
+                    if use_agent_for_image:
+                        prompt = conf().get(
+                            "image_agent_prompt",
+                            "请结合当前人设与会话上下文，对这张图片给出有温度的反馈。"
+                        )
+                        agent_context = Context(ContextType.TEXT, f"{prompt}\n[图片: {image_path}]", dict(context.kwargs))
+                        agent_context["origin_ctype"] = ContextType.IMAGE
+                        vision_reply = super().build_reply_content(agent_context.content, agent_context)
+                    else:
+                        vision_reply = Bridge().fetch_reply_content(image_path, context)
                     if vision_reply and vision_reply.type != ReplyType.ERROR:
                         reply = vision_reply
                     else:
@@ -255,7 +263,7 @@ class ChatChannel(Channel):
                         prompt = conf().get("image_recognition_prompt", "请描述这张图片的主要内容。")
                         fallback_context = Context(ContextType.TEXT, f"{prompt}\n[图片: {image_path}]", dict(context.kwargs))
                         fallback_context["origin_ctype"] = ContextType.IMAGE
-                        fallback_reply = Bridge().fetch_reply_content(fallback_context.content, fallback_context)
+                        fallback_reply = super().build_reply_content(fallback_context.content, fallback_context)
                         if fallback_reply and fallback_reply.type != ReplyType.ERROR:
                             reply = fallback_reply
                         else:
