@@ -432,6 +432,7 @@ class AgentBridge:
             "gemini_api_key": "GEMINI_API_KEY",
             "claude_api_key": "CLAUDE_API_KEY",
             "linkai_api_key": "LINKAI_API_KEY",
+            "grok_api_key": "GROK_API_KEY",
         }
         
         # Use fixed secure location for .env file

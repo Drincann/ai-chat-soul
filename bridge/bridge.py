@@ -57,6 +57,8 @@ class Bridge(object):
                 self.btype["chat"] = const.MOONSHOT
             if model_type and model_type.startswith("kimi"):
                 self.btype["chat"] = const.MOONSHOT
+            if model_type and model_type.startswith("grok"):
+                self.btype["chat"] = const.GROK
 
             if model_type and model_type.startswith("doubao"):
                 self.btype["chat"] = const.DOUBAO

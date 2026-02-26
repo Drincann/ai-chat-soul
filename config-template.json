@@ -6,6 +6,8 @@
   "ark_api_key": "",
   "ark_base_url": "https://ark.cn-beijing.volces.com/api/v3",
   "moonshot_api_key": "",
+  "grok_api_key": "",
+  "grok_api_base": "https://api.x.ai/v1",
   "dashscope_api_key": "",
   "claude_api_key": "",
   "claude_api_base": "https://api.anthropic.com/v1",

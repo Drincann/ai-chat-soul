@@ -13,6 +13,7 @@ ZHIPU_AI = "glm-4"
 MOONSHOT = "moonshot"
 MiniMax = "minimax"
 MODELSCOPE = "modelscope"
+GROK = "grok"
 
 # 模型列表
 # Claude (Anthropic)
@@ -109,6 +110,13 @@ MOONSHOT = "moonshot"
 KIMI_K2 = "kimi-k2"
 KIMI_K2_5 = "kimi-k2.5"
 
+# Grok (xAI)
+GROK_BETA = "grok-beta"
+GROK_2 = "grok-2"
+GROK_2_LATEST = "grok-2-latest"
+GROK_3 = "grok-3"
+GROK_3_LATEST = "grok-3-latest"
+
 # Doubao (Volcengine Ark)
 DOUBAO = "doubao"
 DOUBAO_SEED_2_CODE = "doubao-seed-2-0-code-preview-260215"
@@ -168,6 +176,9 @@ MODEL_LIST = [
               # Kimi
               MOONSHOT, "moonshot-v1-8k", "moonshot-v1-32k", "moonshot-v1-128k",
               KIMI_K2, KIMI_K2_5,
+
+              # Grok
+              GROK, GROK_BETA, GROK_2, GROK_2_LATEST, GROK_3, GROK_3_LATEST,
 
               # Doubao
               DOUBAO, DOUBAO_SEED_2_CODE, DOUBAO_SEED_2_PRO, DOUBAO_SEED_2_LITE, DOUBAO_SEED_2_MINI,
